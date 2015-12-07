@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS deaviceheat;
+DROP TABLE IF EXISTS deviceheat;
