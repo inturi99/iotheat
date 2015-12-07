@@ -18,7 +18,8 @@
                  [reagent "0.5.1"]
                  [yesql "0.5.1"]
                  [com.cognitect/transit-cljs "0.8.225"]
-                 [ring-cors "0.1.7"]]
+                 [ring-cors "0.1.7"]
+                 [bouncer "0.3.3"]]
 
   :plugins [[lein-ring "0.8.13"]
             [migratus-lein "0.1.7"]
