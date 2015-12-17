@@ -29,6 +29,14 @@
                                      (rr/response  (db/get-uid-all-deviceheat
                                                     {:uid uid}))
                                      content-type))
+  (GET "/deviceheat1/:uid/:temperature/:uv" [uid temperature uv]
+       (db/insert-deviceheat {:uid uid
+                              :temperature (if (nil? temperature)-1
+                                               (read-string temperature))
+                              :uv (if (nil? uv)-1 (read-string uv))})
+       (rr/content-type
+        (rr/response "") content-type))
+
   (GET "/deviceheat" [] (rr/content-type
                          (rr/response  (db/get-all-deviceheat-latest))
                          content-type))
@@ -40,6 +48,7 @@
                                  :uv (if (nil? uv)-1 uv)})
           (rr/content-type
            (rr/response "") content-type)))
+
   (route/not-found "<h1>Page not found</h1>"))
 
 
