@@ -18,7 +18,7 @@
           params
           "uid" v/required
           "heat"[v/required v/number]
-          "uv" [v/required v/number])))
+          "humidity" [v/required v/number])))
 
 (def content-type  "application/json; charset=utf-8")
 
@@ -49,10 +49,10 @@
                                      (rr/response  (db/get-uid-all-deviceheat
                                                     {:uid uid}))
                                      content-type))
-  (GET "/deviceheat1/:uid/:temperature/:uv" [uid temperature uv]
+  (GET "/deviceheat1/:uid/:temperature/:humidity" [uid temperature humidity]
        (db/insert-deviceheat {:uid uid
                               :temperature (if (nil? temperature)-1 (read-string temperature))
-                              :uv (if (nil? uv)-1 (read-string uv))})
+                              :humidity (if (nil? humidity)-1 (read-string humidity))})
        (rr/content-type
         (rr/response "") content-type))
 
@@ -67,12 +67,12 @@
 
   (POST "/deviceheat" {body :body}
         (let [{t "temperature" uid "uid"
-               uv "uv"} body]
+               humidity "humidity"} body]
           (when-not (is-same-temparature? uid t)
             (db/insert-deviceheat
              {:uid uid
               :temperature (if (nil? t)-1 t)
-              :uv (if (nil? uv)-1 uv)})
+              :humidity (if (nil? humidity)-1 humidity)})
             (push-data clients (generate-string (db/get-all-deviceheat-latest))))
           (rr/content-type
            (rr/response "") content-type)))
