@@ -8,5 +8,5 @@ SELECT * FROM deviceheat WHERE uid= :uid ORDER BY createdatetime DESC
 SELECT DISTINCT ON(uid) * FROM deviceheat ORDER BY uid,createdatetime DESC
 
 --name: insert-deviceheat
-INSERT INTO deviceheat(uid,temperature,uv,createdatetime)
-VALUES(:uid,:temperature,:uv,now()) RETURNING id;
+INSERT INTO deviceheat(uid,temperature,humidity,createdatetime)
+VALUES(:uid,:temperature,:humidity,now()) RETURNING id;
