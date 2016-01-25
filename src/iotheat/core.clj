@@ -9,7 +9,9 @@
             [iotheat.db.core :as db]
             [bouncer.core :as b]
             [bouncer.validators :as v]
-            [cheshire.core :refer :all])
+            [cheshire.core :refer :all]
+            [clj-time.local :as l]
+            [clj-time.coerce :as c])
   (:use org.httpkit.server)
   (:gen-class))
 
@@ -21,6 +23,9 @@
           "humidity" [v/required v/number])))
 
 (def content-type  "application/json; charset=utf-8")
+
+
+
 
 (def clients (atom {}))
 
@@ -46,8 +51,9 @@
                                                        {:uid uid}))
                                         content-type))
   (GET "/deviceheat/all/:uid" [uid] (rr/content-type
-                                     (rr/response  (db/get-uid-all-deviceheat
-                                                    {:uid uid}))
+                                     (rr/response (map (fn [o](assoc-in o [:createdatetime](str (l/to-local-date-time (o :createdatetime)))))
+                                                       (db/get-uid-all-deviceheat
+                                                        {:uid uid})))
                                      content-type))
   (GET "/deviceheat1/:uid/:temperature/:humidity" [uid temperature humidity]
        (db/insert-deviceheat {:uid uid
@@ -56,9 +62,11 @@
        (rr/content-type
         (rr/response "") content-type))
 
-  (GET "/deviceheat" [] (rr/content-type
-                         (rr/response  (db/get-all-deviceheat-latest))
-                         content-type))
+  (GET "/deviceheat" []
+       (rr/content-type
+        (rr/response (map (fn [o](assoc-in o [:createdatetime](str (l/to-local-date-time (o :createdatetime)))))
+                          (db/get-all-deviceheat-latest)))
+        content-type))
   (GET "/deviceheat/check/:uid/:temp" [uid temp]
        (rr/content-type
         (rr/response {:val 20}) content-type))
